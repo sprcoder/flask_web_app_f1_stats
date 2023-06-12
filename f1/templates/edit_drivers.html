@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+{% block title %}F1 Edit Driver{% endblock %}
+{% block content %}
+{% from "country_selector.html" import country_selector %}
+{% from "_formhelpers.html" import render_field %}
+<style>
+  .footer{display:none}
+</style>
+<div class="card mx-auto w-50" style="margin-top: 1em;">
+  <div class="card-header text-center">
+    <div class="h3">Edit Driver Details</div>
+  </div>
+  <div class="card-body">
+    <form method="POST">
+      {{render_field(form.drivername)}}
+      {{render_field(form.image)}}
+      {{render_field(form.birthdate)}}
+      {{country_selector(country)}}
+      <div class="row">
+        <div class="col">
+          {{render_field(form.podiums)}}
+        </div>
+        <div class="col">
+          {{render_field(form.championships)}}
+        </div>
+      </div>
+      
+      <div class="text-center">
+        {{form.submit(class="btn btn-primary text-center")}}
+        {% if request.args.get('id')|int < 1000 %}
+        <a class="btn btn-secondary text-center" href="{{url_for('f1.update_one_driver', **request.args)}}">Reset to Original</a>
+        {% endif %}
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

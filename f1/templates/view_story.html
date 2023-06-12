@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block title %}Read Story{% endblock %}
+{% block content %}
+<style>
+  .footer{display: none;}
+  table{border: none}
+</style>
+<div class="card" style="margin: 20px;">
+  <img src="{{story.imagestr}}" class="card-img-top mx-auto center" style="width: 60%;">
+  <div class="card-body">
+    <h2 class="card-title text-center">{{story.short_desc}}</h2>
+    <p>{{story.long_desc}}</p>
+  </div>
+</div>
+{% endblock %}

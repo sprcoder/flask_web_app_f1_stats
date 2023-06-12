@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+{% block title %}F1 Create Driver{% endblock %}
+{% block content %}
+{% from "country_selector.html" import country_selector %}
+{% from "_formhelpers.html" import render_field %}
+<style>
+  .footer{display:none}
+  .card-block{min-height: 300px;}
+  .horizontal-scrollable {
+            overflow-x: auto;
+        }
+</style>
+<div class="container-fluid">
+<div class="card mx-auto w-50" style="margin-top: 1em;">
+  <div class="card-header text-center">
+    <div class="h3">Search</div>
+  </div>
+  <div class="card-body">
+    <form method="GET">
+      {{render_field(form1.drivername)}}
+      <label for="remote">Remote Search</label>
+      <input type="checkbox" id="remote" name="remote" value="remote">
+      <div class="text-center">
+          {{form1.submit(class="btn btn-primary text-center")}}
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- "display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); grid-gap: 0.5rem;" -->
+
+{% if drivers and drivers|length > 0 %}
+{% set i = 1 %}
+<div class="container horizontal-scrollable" style="margin-top: 1em; margin-bottom: 1em;">
+  <div class="horizontal-scrollable row flex-row flex-nowrap mt-4 pb-4 pt-2">
+    {% for driver in drivers %}
+    <div class="col-3">
+      <div class="card card-block card-{{i}} text-center">
+        <img src="{{driver.url}}" class="card-img-top text-center" style="aspect-ratio: 1; width: inherit; height: inherit;">
+        <div class="card-body">
+          <h5 class="card-title text-center">{{driver.name}}</h5>
+          {% if remote == 'remote' %}
+          <form method="POST" action="{{url_for('f1.add_driver')}}">
+            <input type="hidden" id="driverid" name="driverid" value="{{driver.id}}">
+            <input type="submit" class="btn btn-danger" value="Add Driver" />
+          </form>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% set i = i+1 %}
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+  <div class="card mx-auto w-50" style="margin-top: 1em;">
+    <div class="card-header text-center">
+      <div class="h3">Create</div>
+    </div>
+    <div class="card-body">
+      <form method="POST">
+        {{render_field(form2.drivername)}}
+        {{render_field(form2.image)}}
+        {{render_field(form2.birthdate)}}
+        {{country_selector()}}
+        <div class="row">
+          <div class="col">
+            {{render_field(form2.podiums)}}
+          </div>
+          <div class="col">
+            {{render_field(form2.championships)}}
+          </div>
+        </div>
+        <div class="text-center">
+          {{form2.submit(class="btn btn-primary text-center")}}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends "layout.html" %}
+{% block title %}Assign Roles{% endblock %}
+{% block content %}
+<div class="card mx-auto w-75" style="margin-top: 1em;">
+  <div class="card-header text-center">
+    <div class="h1">Assign Roles</div>
+  </div>
+  <div class="card-body">
+    <form method="GET">
+        <input type="text" placeholder="Partial email address"
+            value="{{request.args.get('email', '')}}" name="email" />
+        <input type="submit" class="btn btn-secondary" value="Search" />
+    </form>
+    <div class="card-deck" style="margin-top: 1em; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); grid-gap: 0.5rem;">
+      <div class="card">
+        <div class="card-header text-center">Users</div>
+        <div class="card-body">
+          <table class="table">
+            {% set rows = users %}
+            {% if rows and rows|length > 0 %}
+            <thead>
+                <tr class="text-capitalize">
+                    {% for r in rows[0] %}
+                    <th>{{r}}</th>
+                    {% endfor %}
+                    <th>Select</th>
+                </tr>
+            </thead>
+            {% for r in rows %}
+            <tr>
+                {% for v in r.values() %}
+                <td>{{v}}</td>
+                {% endfor %}
+                <td>
+                    <input form="apply" type="checkbox" class="form-check"
+                        name="users[]" value="{{r.get('id')}}" />
+                </td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <p>No results to show</p>
+            {% endif %}
+        </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header text-center">Roles</div>
+        <div class="card-body">
+          <table class="table">
+            {% set rows = roles %}
+            {% if rows and rows|length > 0 %}
+            <thead>
+                <tr class="text-capitalize">
+                    {% for r in rows[0] %}
+                    <th>{{r}}</th>
+                    {% endfor %}
+                    <th>Select</th>
+                </tr>
+            </thead>
+            {% for r in rows %}
+            <tr>
+                {% for v in r.values() %}
+                <td>{{v}}</td>
+                {% endfor %}
+                <td>
+                    <input form="apply" type="checkbox" class="form-check"
+                        name="roles[]" value="{{r.get('id')}}" />
+                </td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <p>No results to show</p>
+            {% endif %}
+        </table>
+        </div>
+      </div>
+    </div>
+    <div class="text-center" style="margin-top: 1em;">
+      <form id="apply" method="POST"
+      action="{{url_for('roles.apply')}}?email={{request.args.get('email', '')}}">
+      <!-- will map elements via form attribute on the element itself by form id -->
+        <input type="submit" class="btn btn-primary" value="Apply Roles" />
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

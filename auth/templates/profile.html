@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+{% from "_formhelpers.html" import render_field %}
+<div class="card mx-auto" style="width: 25rem; margin-top: 1em;">
+  <div class="card-header text-center">
+    <div class="h3">Profile</div>
+  </div>
+  <div class="card-body">
+      <form method="POST">
+          {{ form.hidden_tag() }}
+          {{render_field(form.username)}}
+          {{render_field(form.email)}}
+          {{render_field(form.current_password)}}
+          {{render_field(form.password)}}
+          {{render_field(form.confirm)}}
+          <div class="text-center">
+            {{form.submit(class="btn btn-primary")}}
+          </div>
+      </form>
+  </div>
+</div>
+{% endblock %}

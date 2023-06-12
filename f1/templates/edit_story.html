@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block title %}F1 Edit Driver{% endblock %}
+{% block content %}
+{% from "_formhelpers.html" import render_field %}
+<div class="card mx-auto w-50" style="margin-top: 1em;">
+  <div class="card-header text-center">
+    <div class="h3">Create Story</div>
+  </div>
+  <div class="card-body">
+    <form method="POST">
+      {{render_field(form.shortdesc)}}
+      {{render_field(form.longdesc)}}
+      {{render_field(form.image)}}
+      {% if drivers and drivers|length > 0 %}
+      <label for="drivers">Select Driver</label>
+      <select class="form-select" multiple id="drivers" name="drivers">
+        <option value="0">-</option>
+        {# hint expects a list of tuples representing (value, label) #}
+        {% for v,l in drivers %}
+        <option {{'selected' if v in selected}} value="{{v}}">{{l | capitalize}}</option>
+        {% endfor %}
+      </select>
+      {% endif %}
+      <div class="text-center" style="margin-top: 10px;">
+        {{form.submit(class="btn btn-primary text-center")}}
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

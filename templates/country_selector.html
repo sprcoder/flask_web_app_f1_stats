@@ -1,0 +1,43 @@
+{% macro country_selector(country="", layout="vertical") %}
+{% set c = request.args.get("country", request.form.get("country", country or '')) %}
+{% if layout and layout == 'horizontal' %}
+{# version for filter forms #}
+<div class="col">
+    <label class="visually-hidden" for="country">Country</label>
+    <select name="country" id="country" class="form-select" value="{{c}}">
+        <option value="">Select Country...</option>
+    </select>
+</div>
+{% else %}
+{# version for add/edit forms #}
+<div class="form-group mb-3">
+    <label class="form-label" for="country">Country</label>
+    <select name="country" id="country" class="form-select" value="{{c}}" required>
+        <option value="">Select Country...</option>
+    </select>
+</div>
+{% endif %}
+<script>
+    window.addEventListener("load", () => {
+        //use jinja to return a string in the html template
+        //this string will be as if we did let country = "whatever"
+        let country = "{{c}}";
+        //get the country list from the endpoint
+        fetch(`{{url_for('geo.countries')}}`)
+            .then(resp => resp.json())
+            .then(data => {
+                let ele = document.querySelector("select[name='country']");
+                ele.value = "";//clear the value so "onchange" works
+                //dynamically create option tags
+                for (let d of data) {
+                    let nele = document.createElement("option");
+                    nele.value = d.code;
+                    nele.innerText = d.name;
+                    ele.appendChild(nele);
+                }
+                //assign the default or args country
+                ele.value = country;
+            })
+    });
+</script>
+{% endmacro %}

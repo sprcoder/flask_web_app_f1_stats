@@ -1,0 +1,100 @@
+{% extends "layout.html" %}
+{% block title %}Manage Favorite Page{% endblock %}
+{% block content %}
+{% from "country_selector.html" import country_selector %}
+{% from "sort_filter.html" import sort_filter %}
+<style>
+  .footer{display:none}
+</style>
+<div class="container-fluid">
+  <div class="card mx-auto text-center" style="margin-top: 1em; opacity: 0.9;">
+    <h3 style="color: brown;">Manage User Favorites</h3>
+    <form method="GET" style="margin-bottom: 1em;">
+      <div class="row" style="align-items: center;">
+          {% if allusers and allusers|length > 0 %}
+          <div class="col">
+          <label for="users">Users</label>
+          <select class="form-select" multiple id="users" name="users">
+            {% for v,l in allusers %}
+            <option {{'selected' if v in selecteduser}} value="{{v}}">{{l | capitalize}}</option>
+            {% endfor %}
+          </select>
+          </div>
+          {% endif %}
+          <div class="col">
+              <input type="text" name="drivername" class="form-control" id="drivername" placeholder="Driver Name"
+                  value="{{request.args.get('drivername') or ''}}">
+          </div>
+          {{country_selector(layout="horizontal")}}
+          <div class="col">
+            <input type="text" name="team" class="form-control" id="team" placeholder="Team Name"
+                value="{{request.args.get('team') or ''}}">
+          </div>
+          {{sort_filter(cols=sortoptions)}}
+          <div class="col-1">
+              <input class="form-control" type="number" min="1" max="100" id="limit" name="limit"
+                  value="{{request.args.get('limit') or '10'}}" />
+          </div>
+          <div class="col">
+              <div class="row">
+                <div class="col-4">
+                  <input type="submit" class="btn btn-primary" value="Filter" />
+                </div>
+                <div class="col-4">
+                  <a href="?" class="btn btn-secondary">Reset</a>
+                </div>
+              </div>
+          </div>
+      </div>
+    </form>
+  </div>
+  <div class="container-fluid">
+      {% if drivers and drivers|length > 0 %}
+      <div class="card-deck" style="margin-top: 1em; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 0.25fr)); grid-gap: 0.5rem;">
+      {% for driver in drivers %}
+      <div class="card" style="margin-top: 10px;">
+          <img src="{{driver.image}}" class="card-img-top" style="aspect-ratio: 1; width: 100%;">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-2">
+                {% if driver.id < 1000 %}
+                <img src="/static/images/tickmark.png" alt="ServerVerified" style="width: 2.5em; height: 2em;" data-toggle="tooltip" data-placement="top" title="Verified">
+                {% else %}
+                <img src="/static/images/usermark.png" alt="UserVerified" style="width: 2.5em; height: 2em;" data-toggle="tooltip" data-placement="top" title="User Created">
+                {% endif %}
+              </div>
+              <div class="col-6">
+                <h5 class="card-title text-center">{{driver.name}}</h5>
+              </div>
+              <div class="col-2" style="text-align: center;">
+                {% if driver.userfav == 0 %}
+                  <img src="/static/images/whiteheart.jpeg" alt="UserVerified" style="width: 2.5em; height: 2em;" data-toggle="tooltip" data-placement="top" title="{{driver.favcount}}">
+                {% else %}
+                  <img src="/static/images/redheart.jpeg" alt="UserVerified" style="width: 2.5em; height: 2em; text-align: center; align-items: center;" data-toggle="tooltip" data-placement="top" title="{{driver.favcount}}">
+                {% endif %} 
+              </div>
+              <div class="col-1" style="text-align: center;">
+                {{driver.favcount}}
+              </div>
+            </div>
+          </div>
+        </a>
+        <div class="card-footer text-center">
+          {% if driver.userfav == 0 %}
+          <a href="{{url_for('fav.add_fav', did=driver.get('id'), userselected=selecteduser, **request.args)}}" class="btn btn-primary">Add</a>
+          {% else %}
+          <a href="{{url_for('fav.rem_fav_admin', did=driver.get('id'), userselected=selecteduser, **request.args)}}" class="btn btn-danger">Remove</a>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+      </div>
+      {% else %}
+        <div>
+          <h1 style="text-align: center;">No driver records found</h1>
+        </div>
+      {% endif %}
+    
+  </div>
+</div>
+{% endblock %}

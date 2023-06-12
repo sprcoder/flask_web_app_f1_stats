@@ -1,0 +1,76 @@
+{% from "_dropdown_nav.html" import dropdown_nav %}
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: rgb(121, 10, 10); max-height: 50px; opacity: 0.9; z-index: 100; position: relative;">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{{url_for('home.index')}}" style="background-color: white;">
+            <div>
+              <img src="static/images/formula-1-logo.png" alt="F1" style="width: 50px; height: 15px; ">
+            </div>
+            <div style="color: rgb(198, 5, 5); font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; text-align: center; font-size: medium;">
+              StatS
+            </div>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          </style>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                {% if not current_user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link hover-zoom" href="{{url_for('auth.login')}}"><b>Login</b></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{url_for('auth.register')}}"><b>Register</b></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link hover-zoom" href="{{url_for('f1.list_drivers')}}"><b>Drivers</b></a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                  <a class="nav-link hover-zoom" href="{{url_for('auth.landing_page')}}"><b>Home</b></a>
+                </li>
+                {% set stories = [
+                  ("story.list_story", "All Stories"),
+                  ("story.create_story", "New Story") ]
+                  %}
+                <!-- roles nav (requires admin )-->
+                {% if current_user.has_role("Admin") %}
+                {% set roles = [
+                ("roles.add", "Add"),
+                ("roles.list", "List"),
+                ("roles.assign", "Assign")
+                ] %}
+                {% set misc = [
+                  ("f1.update_drivers", "Update all drivers"),
+                  ("f1.insert_driver_stats", "Insert driver stats")]%}
+                {% set drivers = [
+                  ("f1.list_drivers", "All Drivers"),
+                  ("f1.create_drivers", "Add Driver"),
+                  ("fav.myfav", "My Favorites"),
+                  ("fav.user_fav_manage", "Manage Favorites")]%}
+                {{dropdown_nav("Driver", drivers)}}
+                {{dropdown_nav("Story", stories)}}
+                {{dropdown_nav("Roles", roles)}}
+                {{dropdown_nav("Miscellaneous", misc)}}
+                {% else %}
+                  {% set drivers = [
+                    ("f1.list_drivers", "All Drivers"),
+                    ("f1.create_drivers", "Add Driver"),
+                    ("fav.myfav", "My Favorites")]%}
+                  {{dropdown_nav("Driver", drivers)}}
+                  {{dropdown_nav("Story", stories)}}
+                {% endif %}
+                <li class="nav-item">
+                  <a class="nav-link" href="{{url_for('auth.profile')}}"><b>Profile</b></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{url_for('auth.logout')}}"><b>Logout</b></a>
+                </li>
+                {% endif %}
+
+            </ul>
+        </div>
+    </div>
+</nav>

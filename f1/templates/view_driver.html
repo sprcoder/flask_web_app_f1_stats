@@ -1,0 +1,99 @@
+{% extends "layout.html" %}
+{% block title %}F1 Driver Page{% endblock %}
+{% block content %}
+<style>
+  .footer{display: none;}
+  table{border: none}
+</style>
+<ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist" style="margin: 20px;">
+  <li class="nav-item" role="presentation">
+    <a class="nav-link active" aria-current="page" href="{{url_for('f1.list_drivers', drivername=request.args.get('drivername'), team=request.args.get('team'), country=request.args.get('country'), column=request.args.get('column'), order=request.args.get('order'), limit=request.args.get('limit'))}}">All Drivers</a>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true" style="background-color: white;">Profile</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <a class="nav-link active" aria-current="page" href="{{url_for('story.list_story', did=driver.get('id'))}}">Stories</a>
+  </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+        <div class="row" style="margin-left: 20px; margin-right: 20px; margin-bottom: 20px;">
+          <div class="col">
+            <div class="card" style="position:fixed; padding-left: 10%; padding-right: 10%;">
+              <img src="{{driver.image}}" class="card-img-top mx-auto center" style="aspect-ratio: 1; width: 20em; height: auto; align-items: center;">
+              <div class="card-body">
+                <h3 style="text-align: center;">{{driver.name}}</h3>
+                <table class="mx-auto" style="align-items: center;">
+                  <tr>
+                    <td>Age</td>
+                    <td>: {{driver.birthdate}}</td>
+                  </tr>
+                  <tr>
+                    <td>Country</td>
+                    <td>: {{driver.country}}</td>
+                  </tr>
+                  <tr>
+                    <td>Podiums</td>
+                    <td>: {{driver.podiums}}</td>
+                  </tr>
+                  <tr>
+                    <td>Championships</td>
+                    <td>: {{driver.championships}}</td>
+                  </tr>
+                  <tr>
+                    <td>
+                    {% if isfav > 0 %}
+                      Remove Favorite
+                    {% else %}
+                      Add Favorite
+                    {% endif %}
+                    </td>
+                    <td>
+                    {% if isfav > 0 %}
+                      <a href="{{url_for('f1.rem_fav', did=driver.get('id'), **request.args)}}">
+                        <img src="/static/images/redheart.jpeg" alt="UserVerified" style="width: 2.5em; height: 2em; text-align: center; align-items: center;" data-toggle="tooltip" data-placement="top" title="Remove Favorite">
+                      </a>
+                    {% else %}
+                      <a href="{{url_for('f1.fav', did=driver.get('id'), **request.args)}}">
+                        <img src="/static/images/whiteheart.jpeg" alt="UserVerified" style="width: 2.5em; height: 2em; text-align: center; align-items: center;" data-toggle="tooltip" data-placement="top" title="Add Favorite">
+                      </a>
+                    {% endif %}
+                  </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="col s">
+            <div class="card mx-auto text-center">
+              {% if stats and stats|length > 0  %}
+                <div class="card-body" style="overflow-y: auto;">
+                  <h2 style="text-align: center;">Represented Teams</h2>
+                  <table class="mx-auto" style="align-items: center; overflow-y: auto;">
+                    <tr>
+                      <th style="text-align: center;">Season</th>
+                      <th style="text-align: center;">Team</th>
+                      <th></th>
+                    </tr>
+                    {% for stat in stats %}
+                    <tr>
+                      <td style="text-align: center;">{{stat.seasons}}</td>
+                      <td style="text-align: center;">{{stat.teams}}</td>
+                      <td><img src="{{stat.logo}}" alt="{{stat.teams}}" style="align-items: center; width: 8em; height: auto;"></td>
+                    </tr>
+                    {% endfor %}
+                  </table>
+                </div>
+              {% else %}
+                <div class="card-body">
+                  <h2>No Team data found for the driver</h2>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+  </div>
+</div>
+
+{% endblock %}

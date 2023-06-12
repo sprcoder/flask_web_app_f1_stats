@@ -1,0 +1,16 @@
+{% macro dropdown_nav(name, links) %}
+
+<li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+        aria-expanded="false">
+        <b>{{name}}</b>
+    </a>
+    <ul class="dropdown-menu">
+        {% for url, text in links %}
+        <!-- assumes url is a route and text is a string-->
+        <li><a class="dropdown-item" href="{{url_for(url)}}"><b>{{text}}</b></a></li>
+        {% endfor %}
+    </ul>
+</li>
+
+{% endmacro %}
