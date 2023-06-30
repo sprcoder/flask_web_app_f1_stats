@@ -1,4 +1,4 @@
-## My Final Project
+## Flask based Web application
 
 This is a API Based project. \
 The application is called F1 stats. It has Formula 1 driver information with features for users to select favorites and add stories about the drivers. \
